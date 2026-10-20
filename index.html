@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+      <title>Weather Dashboard</title>
+
+      <link rel="stylesheet" href="style.css" />
+   </head>
+   <body>
+      <div class="dashboard">
+         <!-- Sidebar -->
+         <aside class="sidebar">
+            <div class="logo">
+               <span class="logo-icon">☀</span>
+               <span>Atmos</span>
+            </div>
+
+            <nav class="sidebar-nav">
+               <button class="nav-button active">
+                  <span>⌂</span>
+                  <span class="nav-label">Overview</span>
+               </button>
+
+               <button class="nav-button">
+                  <span>☁</span>
+                  <span class="nav-label">Weather</span>
+               </button>
+
+               <button class="nav-button">
+                  <span>◷</span>
+                  <span class="nav-label">Forecast</span>
+               </button>
+
+               <button class="nav-button">
+                  <span>⚙</span>
+                  <span class="nav-label">Settings</span>
+               </button>
+            </nav>
+
+            <div class="sidebar-footer">
+               <span class="status-dot"></span>
+               <span class="nav-label">Weather for everyone</span>
+            </div>
+         </aside>
+
+         <!-- Main Content -->
+         <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+               <div class="page-heading">
+                  <p class="eyebrow">YOUR PERSONAL WEATHER</p>
+                  <h1>Weather Dashboard</h1>
+               </div>
+
+               <form class="search-form">
+                  <span class="search-icon">⌕</span>
+
+                  <input
+                     type="text"
+                     placeholder="Search for a city..."
+                     aria-label="Search for a city"
+                     id="inputId"
+                  />
+
+                  <button type="submit" class="search-button" id="submitSearch">
+                     Search
+                  </button>
+               </form>
+            </header>
+
+            <!-- Main Weather Card -->
+            <section class="weather-card">
+               <div class="weather-top">
+                  <!-- Weather Emoji -->
+                  <div class="weather-visual">
+                     <span class="weather-emoji">⛅</span>
+                     <span class="weather-caption">PRETTY CLOUDY</span>
+                  </div>
+
+                  <!-- City Information -->
+                  <div class="weather-info">
+                     <p class="eyebrow">CURRENT LOCATION</p>
+
+                     <h2 class="city-name">Raipur</h2>
+
+                     <p class="country-name">Chhattisgarh, India</p>
+
+                     <div class="temperature">
+                        <span class="temperature-value">28°</span>
+                        <span class="temperature-unit">C</span>
+                     </div>
+
+                     <p class="weather-description">
+                        A little sunshine, a little cloud.
+                     </p>
+                  </div>
+               </div>
+
+               <!-- Date and Time -->
+               <div class="date-time">
+                  <div class="date-icon">◷</div>
+
+                  <div>
+                     <p class="date-label">TODAY</p>
+                     <p class="date-value">Monday, October 19</p>
+                  </div>
+
+                  <div class="date-divider"></div>
+
+                  <div>
+                     <p class="date-label">LOCAL TIME</p>
+                     <p class="date-value">10:30 AM</p>
+                  </div>
+               </div>
+            </section>
+
+            <!-- Weather Details -->
+            <section class="details-section">
+               <div class="section-heading">
+                  <div>
+                     <p class="eyebrow">AT A GLANCE</p>
+                     <h2>Weather Details</h2>
+                  </div>
+
+                  <span class="details-note">Current conditions</span>
+               </div>
+
+               <div class="details-grid">
+                  <article class="detail-card">
+                     <div class="detail-icon humidity-icon">💧</div>
+                     <p class="detail-label">Humidity</p>
+                     <h3>65<span>%</span></h3>
+                     <p class="detail-description">Moisture in the air</p>
+                  </article>
+
+                  <article class="detail-card">
+                     <div class="detail-icon wind-icon">🌬️</div>
+                     <p class="detail-label">Wind Speed</p>
+                     <h3>12 <span>km/h</span></h3>
+                     <p class="detail-description">Gentle breeze</p>
+                  </article>
+
+                  <article class="detail-card">
+                     <div class="detail-icon feels-icon">🌡️</div>
+                     <p class="detail-label">Feels Like</p>
+                     <h3>30<span>°C</span></h3>
+                     <p class="detail-description">Perceived temperature</p>
+                  </article>
+               </div>
+            </section>
+
+            <!-- Forecast Placeholder -->
+            <section class="forecast-section">
+               <div>
+                  <p class="eyebrow">COMING NEXT</p>
+                  <h2>Weather Forecast</h2>
+                  <p class="forecast-description">
+                     Your upcoming forecast will appear here.
+                  </p>
+               </div>
+
+               <span class="forecast-icon">↗</span>
+            </section>
+
+            <footer class="footer">
+               <p>Made with <span>♥</span> and a little sunshine.</p>
+               <p>Atmos Weather</p>
+            </footer>
+         </main>
+      </div>
+      <script src="script.js"></script>
+   </body>
+</html>
