@@ -356,7 +356,9 @@ body {
     font-size: 28px;
 }
 
-.detail-card h3 span {
+.spans{
+     position: relative;
+    top: 4px;
     color: #999eaa;
     font-size: 14px;
 }
@@ -408,7 +410,12 @@ body {
 .footer span {
     color: #b6ef85;
 }
-
+ 
+.tepuSigns{
+     display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
 /* Smaller screens */
 
