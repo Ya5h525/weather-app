@@ -91,7 +91,7 @@
                      <p class="country-name">Chhattisgarh, India</p>
 
                      <div class="temperature">
-                        <span class="temperature-value">28°</span>
+                        <span class="temperature-value" id="tempu">28°</span>
                         <span class="temperature-unit">C</span>
                      </div>
 
@@ -107,14 +107,14 @@
 
                   <div>
                      <p class="date-label">TODAY</p>
-                     <p class="date-value">Monday, October 19</p>
+                     <p class="date-value" id="dateId">Monday, October 19</p>
                   </div>
 
                   <div class="date-divider"></div>
 
                   <div>
                      <p class="date-label">LOCAL TIME</p>
-                     <p class="date-value">10:30 AM</p>
+                     <p class="date-value" id="timeId" >10:30 AM</p>
                   </div>
                </div>
             </section>
@@ -134,21 +134,21 @@
                   <article class="detail-card">
                      <div class="detail-icon humidity-icon">💧</div>
                      <p class="detail-label">Humidity</p>
-                     <h3>65<span>%</span></h3>
+                     <div class="tepuSigns"><h3 id="humi">65</h3><span class="spans">%</span></div>
                      <p class="detail-description">Moisture in the air</p>
                   </article>
 
                   <article class="detail-card">
                      <div class="detail-icon wind-icon">🌬️</div>
                      <p class="detail-label">Wind Speed</p>
-                     <h3>12 <span>km/h</span></h3>
+                     <div class="tepuSigns"><h3 id="windSpeed">12 </h3><span class="spans">km/h</span></div>
                      <p class="detail-description">Gentle breeze</p>
                   </article>
 
                   <article class="detail-card">
                      <div class="detail-icon feels-icon">🌡️</div>
                      <p class="detail-label">Feels Like</p>
-                     <h3>30<span>°C</span></h3>
+                     <div class="tepuSigns"><h3 id="reTemp">30</h3><span class="spans">°C</span></div>
                      <p class="detail-description">Perceived temperature</p>
                   </article>
                </div>
