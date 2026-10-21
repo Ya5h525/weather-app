@@ -25,13 +25,17 @@ async function citySearch() {
     console.log(cityJson)
     console.log(typeof(cityJson))
     console.log(cityJson.toString())
+    let lat = [];
+    let long =[]
     cityJson.results.forEach(element => {
     
     const li = document.createElement('li');
     li.textContent =`📍  ${element.name} - ${element.admin1 } , ${element.country }`  
     ul.appendChild(li)
     searchOptionsContainer.appendChild(ul)
-    
+     lat.push(element.latitude)
+     long.push(element.latitude)
+
 });
 
 
