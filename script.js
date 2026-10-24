@@ -7,6 +7,7 @@ const windSpeed = document.getElementById('windSpeed');
 const inputField = document.getElementById('inputId');
 const searchOptionsContainer = document.getElementById('searchOptionsContainer');
 const searchbutton = document.getElementById('submitSearch');
+const sideNavBar = document.getElementById('sideNav')
 
 let searchinput;
 let cityJson;
@@ -18,7 +19,7 @@ let latlongid;
 
 const ul = document.createElement('ul');
 
-searchbutton.addEventListener('click', function(e) {
+searchbutton.addEventListener('click', function (e) {
     e.preventDefault();
     searchinput = formatString(inputField.value);
     citySearch();
@@ -49,7 +50,7 @@ async function citySearch() {
     searchOptionsContainer.appendChild(ul);
 }
 
-ul.addEventListener('click', function(e) {
+ul.addEventListener('click', function (e) {
     if (e.target.tagName !== 'LI') return;
 
     latlongid = Number(e.target.id);
@@ -116,3 +117,14 @@ function clockrun() {
 clockrun();
 setInterval(clockrun, 30000);
 
+sideNavBar.addEventListener('click', function (e) {
+    let element = e.target
+    let navItem = element.closest('.nav-button');
+    if (!navItem || !sideNavBar.contains(navItem)) return;
+    else {
+        sideNavBar.querySelectorAll('.nav-button').forEach(button => {
+            button.classList.remove('active');
+        })
+        navItem.classList.add('active');
+    }
+})
