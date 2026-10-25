@@ -568,3 +568,77 @@ body {
         flex-wrap: wrap;
     }
 }
+
+.settings-page {
+    padding: 20px;
+    color: #f1f5f9;
+}
+
+.settings-page h2 {
+    margin-bottom: 8px;
+}
+
+.settings-page > p {
+    color: #94a3b8;
+    margin-bottom: 25px;
+}
+
+.settings-card {
+    background-color: #1a1d24;
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid #4c525b;
+}
+
+.settings-card h3 {
+    margin-bottom: 10px;
+}
+
+.settings-card p {
+    color: #94a3b8;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.city-setting {
+    display: flex;
+    gap: 12px;
+}
+
+.city-setting input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    background-color: #2c2e33;
+    color: #f1f5f9;
+    border: 1px solid #616264;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+.city-setting button,
+#darkModeButton {
+    padding: 11px 20px;
+    background-color: #64ab27;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.city-setting button:hover,
+#darkModeButton:hover {
+    background-color: #9bea56;
+}
+
+@media (max-width: 500px) {
+    .city-setting {
+        flex-direction: column;
+    }
+
+    .city-setting button {
+        width: 100%;
+    }
+}

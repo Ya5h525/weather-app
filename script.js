@@ -8,6 +8,11 @@ const inputField = document.getElementById('inputId');
 const searchOptionsContainer = document.getElementById('searchOptionsContainer');
 const searchbutton = document.getElementById('submitSearch');
 const sideNavBar = document.getElementById('sideNav')
+const settingTemplate = document.getElementById('settingTemplate')
+const mainContent = document.getElementById('mainContent')
+const overviewTemplate = document.getElementById('overviewTemplate')
+const forcastTemplate = document.getElementById('forcastTemplate')
+
 
 let searchinput;
 let cityJson;
@@ -103,7 +108,7 @@ function clockrun() {
 
     const min = now.getMinutes().toString().padStart(2, '0');
 
-    document.getElementById('timeId').textContent = `${hour}:${min}${AmPm}`;
+    const timeElement = document.getElementById('timeId').textContent = `${hour}:${min}${AmPm}`;
 
     const fullDateString = now.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -111,7 +116,9 @@ function clockrun() {
         day: 'numeric'
     });
 
-    document.getElementById('dateId').textContent = fullDateString;
+    const dateElement = document.getElementById('dateId').textContent = fullDateString;
+
+     if (!timeElement || !dateElement) return;
 }
 
 clockrun();
@@ -127,4 +134,24 @@ sideNavBar.addEventListener('click', function (e) {
         })
         navItem.classList.add('active');
     }
+
+    if (navItem.id === 'setting') {
+        //main-content
+        let set = settingTemplate.content.cloneNode(true);
+        mainContent.innerHTML = '';
+        mainContent.appendChild(set);
+        
+    }
+    
+    else if (navItem.id === 'over') {
+        let over = overviewTemplate.content.cloneNode(true);
+        mainContent.innerHTML = '';
+        mainContent.appendChild(over);
+    }
+    else if (navItem.id === 'forca') {
+        let forca = forcastTemplate.content.cloneNode(true);
+        mainContent.innerHTML = '';
+        mainContent.appendChild(forca);
+    }
+
 })
