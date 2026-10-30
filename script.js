@@ -155,3 +155,55 @@ sideNavBar.addEventListener('click', function (e) {
     }
 
 })
+const body = document.body;
+
+let darkmode = localStorage.getItem('darkmode');
+
+// Restore saved preference
+if (darkmode === 'active') {
+    enabledarkmode();
+}
+else {
+    disableDarkmode();
+}
+
+
+// Event delegation
+mainContent.addEventListener('click', function(e) {
+
+    if (e.target.id !== 'darkModeButton') return;
+
+    if (body.classList.contains('darkmode')) {
+        disableDarkmode(e.target);
+    }
+    else {
+        enabledarkmode(e.target);
+    }
+
+});
+
+
+function enabledarkmode(button) {
+
+    localStorage.setItem('darkmode', 'active');
+
+    body.classList.add('darkmode');
+
+    if (button) {
+        button.textContent = 'Enable light mode';
+    }
+
+}
+
+
+function disableDarkmode(button) {
+
+    localStorage.removeItem('darkmode');
+
+    body.classList.remove('darkmode');
+
+    if (button) {
+        button.textContent = 'Enable dark mode';
+    }
+
+}
