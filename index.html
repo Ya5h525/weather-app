@@ -70,8 +70,8 @@
             <div class="weather-top">
                <!-- Weather Emoji -->
                <div class="weather-visual">
-                  <span class="weather-emoji">⛅</span>
-                  <span class="weather-caption">PRETTY CLOUDY</span>
+                  <span class="weather-emoji" id="weatherEmoji">⛅</span>
+                  <span class="weather-caption" id="weatherCaption">PRETTY CLOUDY</span>
                </div>
 
                <!-- City Information -->
@@ -299,17 +299,193 @@
          </template>
          <template id="forcastTemplate">
 
-              <section class="forecast-section">
+           
+
+    <section class="forecast-page">
+
+        <div class="forecast-header">
             <div>
-               <p class="eyebrow">COMING NEXT</p>
-               <h2>Weather Forecast</h2>
-               <p class="forecast-description">
-                  Your upcoming forecast will appear here. we are working on it
-               </p>
+                <p class="eyebrow">WEATHER OUTLOOK</p>
+                <h2>7-Day Forecast</h2>
+                <p class="forecast-subtitle">
+                    Here's what the weather looks like for the upcoming week.
+                </p>
             </div>
 
-            <span class="forecast-icon">↗</span>
-         </section>
+            <div class="forecast-location">
+                <span>📍</span>
+                <span class="forecast-city">Raipur, India</span>
+            </div>
+        </div>
+
+
+        <section class="weekly-forecast">
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Today</h3>
+                    <p>Oct 30</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">☀️</span>
+                    <span>Sunny</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>0%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>32°</strong>
+                    <span>24°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Saturday</h3>
+                    <p>Oct 31</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">🌤️</span>
+                    <span>Partly cloudy</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>10%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>31°</strong>
+                    <span>23°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Sunday</h3>
+                    <p>Nov 1</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">⛅</span>
+                    <span>Cloudy</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>20%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>29°</strong>
+                    <span>22°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Monday</h3>
+                    <p>Nov 2</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">🌧️</span>
+                    <span>Light rain</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>65%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>27°</strong>
+                    <span>21°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Tuesday</h3>
+                    <p>Nov 3</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">🌦️</span>
+                    <span>Showers</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>45%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>28°</strong>
+                    <span>22°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Wednesday</h3>
+                    <p>Nov 4</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">☀️</span>
+                    <span>Sunny</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>5%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>32°</strong>
+                    <span>23°</span>
+                </div>
+            </div>
+
+
+            <div class="forecast-day">
+                <div class="forecast-day-name">
+                    <h3>Thursday</h3>
+                    <p>Nov 5</p>
+                </div>
+
+                <div class="forecast-weather">
+                    <span class="forecast-weather-icon">🌤️</span>
+                    <span>Partly cloudy</span>
+                </div>
+
+                <div class="forecast-humidity">
+                    <span>💧</span>
+                    <span>15%</span>
+                </div>
+
+                <div class="forecast-temperatures">
+                    <strong>30°</strong>
+                    <span>22°</span>
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+
+
          </template>
          <template id="settingTemplate">
             <div class="settings-page">

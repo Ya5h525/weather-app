@@ -688,3 +688,193 @@ body {
         width: 100%;
     }
 }
+/* Forecast Page */
+
+.forecast-page {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    min-width: 0;
+}
+
+
+/* Forecast Header */
+
+.forecast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.forecast-header h2 {
+    font-size: 26px;
+}
+
+.forecast-subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.forecast-location {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 15px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+
+/* Weekly Forecast */
+
+.weekly-forecast {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* Individual Day */
+
+.forecast-day {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 0.6fr 0.7fr;
+    align-items: center;
+    gap: 15px;
+
+    padding: 18px 22px;
+
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    transition: background-color 0.2s;
+}
+
+.forecast-day:hover {
+    background-color: var(--surface-alt);
+}
+
+
+/* Day Name */
+
+.forecast-day-name h3 {
+    font-size: 15px;
+}
+
+.forecast-day-name p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+
+/* Weather Condition */
+
+.forecast-weather {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.forecast-weather-icon {
+    font-size: 27px;
+}
+
+
+/* Rain Probability */
+
+.forecast-rain {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+
+/* Temperatures */
+
+.forecast-temperatures {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.forecast-temperatures strong {
+    color: var(--text);
+}
+
+.forecast-temperatures span {
+    color: var(--muted);
+}
+
+
+/* Forecast Responsive */
+
+@media (max-width: 700px) {
+
+    .forecast-day {
+        grid-template-columns: 1fr 1.5fr 0.6fr;
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .forecast-rain {
+        display: none;
+    }
+
+    .forecast-weather {
+        gap: 7px;
+        font-size: 12px;
+    }
+
+    .forecast-weather-icon {
+        font-size: 23px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .forecast-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .forecast-day {
+        grid-template-columns: 0.8fr 1.3fr 0.6fr;
+        padding: 13px 10px;
+        gap: 5px;
+    }
+
+    .forecast-day-name h3 {
+        font-size: 12px;
+    }
+
+    .forecast-day-name p {
+        font-size: 10px;
+    }
+
+    .forecast-weather {
+        font-size: 10px;
+    }
+
+    .forecast-weather-icon {
+        font-size: 20px;
+    }
+
+    .forecast-temperatures {
+        gap: 7px;
+        font-size: 12px;
+    }
+
+}
