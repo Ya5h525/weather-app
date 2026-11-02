@@ -10,7 +10,7 @@
    <link rel="stylesheet" href="style.css" />
 </head>
 
-<body class="darkmode" >
+<body class="darkmode" data-page="overview">
    <div class="dashboard">
       <!-- Sidebar -->
       <aside class="sidebar">
@@ -153,17 +153,7 @@
          </section>
 
          <!-- Forecast Placeholder -->
-         <section class="forecast-section">
-            <div>
-               <p class="eyebrow">COMING NEXT</p>
-               <h2>Weather Forecast</h2>
-               <p class="forecast-description">
-                  Your upcoming forecast will appear here.
-               </p>
-            </div>
-
-            <span class="forecast-icon">↗</span>
-         </section>
+        
 
          <footer class="footer">
             <p>Made with <span>♥</span> and a little sunshine.</p>
@@ -498,7 +488,10 @@
 
                   <div class="city-setting">
                      <input type="text" id="defaultCity" placeholder="Enter city name">
-                     <button type="button" id="defaultCitySaveButton">Save</button>
+                     <button type="button" id="defaultCitySaveButton">Search</button>
+                  </div>
+                  <div id="defaultCitiesContainer">
+
                   </div>
                </section>
 

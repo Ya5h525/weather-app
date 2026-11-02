@@ -155,35 +155,72 @@ body {
     gap: 20px;
     position: relative;
 }
-
 #searchOptionsContainer {
-    display: flex;
     position: absolute;
-    top: 100%;
-    right: 0%;
-    width: relative;
-    z-index: 10;
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    flex-direction: row-reverse;
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: 380px;
+    max-width: calc(100vw - 32px);
+
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #searchOptionsContainer ul {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 6px;
+
+    list-style: none;
     font-family: Arial, sans-serif;
     color: var(--text);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: var(--text);
+
+    background: var(--dropdown-bg);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 6px 8px 6px 12px;
-    width: 380px;
-    max-width: 100%;
-    background-color: var(--dropdown-bg);
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+    max-height: 260px;
+    overflow-y: auto;
 }
 
+/* Individual city options */
+
+#searchOptionsContainer li {
+    padding: 12px 14px;
+    border-radius: 8px;
+
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+                transform 0.2s ease;
+}
+
+#searchOptionsContainer li:hover {
+    background: var(--surface);
+    transform: translateX(4px);
+}
+
+#searchOptionsContainer li:active {
+    transform: scale(0.98);
+}
+
+/* Scrollbar */
+
+#searchOptionsContainer ul::-webkit-scrollbar {
+    width: 5px;
+}
+
+#searchOptionsContainer ul::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
 .eyebrow {
     color: var(--muted);
     font-size: 11px;
@@ -877,4 +914,136 @@ body {
         font-size: 12px;
     }
 
+}
+/* =====================================
+   DEFAULT CITY DROPDOWN
+===================================== */
+
+#defaultCitiesContainer {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    z-index: 100;
+}
+
+/* Dropdown list */
+#defaultCitiesContainer ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+
+    box-sizing: border-box;
+    list-style: none;
+    padding: 6px;
+    margin: 8px 0 0;
+
+    max-height: 240px;
+    overflow-y: auto;
+
+    border-radius: 12px;
+
+    animation: dropdownAppear 0.2s ease;
+    transition: all 0.25s ease;
+}
+
+/* Individual city options */
+#defaultCitiesContainer li {
+    padding: 12px 14px;
+    border-radius: 8px;
+
+    font-size: 14px;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Hover effect */
+#defaultCitiesContainer li:hover {
+    transform: translateX(4px);
+}
+
+/* Click effect */
+#defaultCitiesContainer li:active {
+    transform: scale(0.98);
+}
+
+
+/* =====================================
+   LIGHT MODE
+===================================== */
+
+#defaultCitiesContainer ul {
+    background: #e9edf3;
+    border: 1px solid #d0d7e2;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.16);
+}
+
+#defaultCitiesContainer li {
+    color: #293548;
+}
+
+#defaultCitiesContainer li:hover {
+    background: #d4dce8;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =====================================
+   DARK MODE
+===================================== */
+
+body.darkmode #defaultCitiesContainer ul {
+    background: #181a1d;
+    border: 1px solid #45536a;
+
+    box-shadow:
+        0 0 12px rgba(100, 160, 255, 0.12),
+        0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.darkmode #defaultCitiesContainer li {
+    color: #e5edfa;
+}
+
+body.darkmode #defaultCitiesContainer li:hover {
+    background: #394961;
+
+    box-shadow: 0 0 12px rgba(100, 160, 255, 0.16);
+}
+
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+#defaultCitiesContainer ul::-webkit-scrollbar {
+    width: 5px;
+}
+
+#defaultCitiesContainer ul::-webkit-scrollbar-thumb {
+    background: #8996a9;
+    border-radius: 10px;
+}
+
+
+/* =====================================
+   ANIMATION
+===================================== */
+
+@keyframes dropdownAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

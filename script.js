@@ -4,6 +4,10 @@ const settingTemplate = document.getElementById('settingTemplate');
 const mainContent = document.getElementById('mainContent');
 const overviewTemplate = document.getElementById('overviewTemplate');
 const forcastTemplate = document.getElementById('forcastTemplate');
+const inputDefault = mainContent.querySelector('#defaultCity');
+const defaultCitySaveButton = document.getElementById('defaultCitySaveButton');
+const defaultCitiesContainer = document.getElementById('defaultCitiesContainer');
+
 
 let searchinput;
 let cityJson;
@@ -27,7 +31,7 @@ mainContent.addEventListener('click', function (e) {
         searchinput = formatString(inputField.value);
         if (!searchinput) return;
 
-        citySearch(searchOptionsContainer);
+        citySearch(searchOptionsContainer, searchinput);
     }
 
     const darkModeButton = e.target.closest('#darkModeButton');
@@ -38,13 +42,33 @@ mainContent.addEventListener('click', function (e) {
             enabledarkmode(darkModeButton);
         }
     }
+
+   if(body.dataset.page === 'setting'){
+    const saveButton = e.target.closest('#defaultCitySaveButton');
+
+    if (!saveButton) return;
+
+    const inputDefault = mainContent.querySelector('#defaultCity');
+    const defaultCitiesContainer = mainContent.querySelector('#defaultCitiesContainer');
+
+    if (!inputDefault || !defaultCitiesContainer) return;
+
+    const defaultCity = formatString(inputDefault.value);
+
+    if (!defaultCity) return;
+
+    citySearch(defaultCitiesContainer, defaultCity);
+   }
+    
+
+;
 });
 
 // fetch city suggestions
-async function citySearch(searchOptionsContainer) {
+async function citySearch(Container, input) {
     ul.replaceChildren();
 
-    const jsonCitylink = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchinput)}&count=10&language=en&format=json`;
+    const jsonCitylink = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(input)}&count=10&language=en&format=json`;
 
     try {
         const response = await fetch(jsonCitylink);
@@ -57,12 +81,12 @@ async function citySearch(searchOptionsContainer) {
         } else {
             cityJson.results.forEach((element, index) => {
                 const li = document.createElement('li');
-                li.textContent = `📍 ${element.name} - ${element.admin1 || ''}, ${element.country}`;
+                li.textContent = `🌐 ${element.name} - ${element.admin1 || ''}, ${element.country}`;
                 li.dataset.index = index;
                 ul.appendChild(li);
             });
         }
-        searchOptionsContainer.appendChild(ul);
+        Container.appendChild(ul);
     } catch (error) {
         console.error('City search failed:', error);
     }
@@ -75,7 +99,7 @@ ul.addEventListener('click', function (e) {
 
     const latlongid = Number(selectedOption.dataset.index);
     const cityData = cityJson.results[latlongid];
-    
+
     if (!cityData) return;
 
     selectedCity = {
@@ -85,19 +109,25 @@ ul.addEventListener('click', function (e) {
         latitude: cityData.latitude,
         longitude: cityData.longitude
     };
+    console.log(selectedCity);
+    if (body.dataset.page === 'overview') {
+        const cityElement = mainContent.querySelector('.city-name');
+        const countryElement = mainContent.querySelector('.country-name');
 
-    const cityElement = mainContent.querySelector('.city-name');
-    const countryElement = mainContent.querySelector('.country-name');
+        if (cityElement) {
+            cityElement.textContent = selectedCity.name;
+        }
+        if (countryElement) {
+            countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
+        }
 
-    if (cityElement) {
-        cityElement.textContent = selectedCity.name;
+        changeWeather();
+        ul.remove();
     }
-    if (countryElement) {
-        countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
+    else if (body.dataset.page === 'setting') {
+        console.log(ul)
+        console.log(selectedCity)
     }
-
-    changeWeather();
-    ul.remove();
 });
 
 // fetch weather data for the selected city
@@ -206,6 +236,7 @@ clockrun();
 setInterval(clockrun, 30000);
 
 // handle sidebar navigation and templates
+
 sideNavBar.addEventListener('click', function (e) {
     const navItem = e.target.closest('.nav-button');
     if (!navItem || !sideNavBar.contains(navItem)) return;
@@ -216,6 +247,7 @@ sideNavBar.addEventListener('click', function (e) {
     navItem.classList.add('active');
 
     if (navItem.id === 'setting') {
+        body.dataset.page = 'setting';
         const set = settingTemplate.content.cloneNode(true);
         mainContent.replaceChildren(set);
 
@@ -223,8 +255,13 @@ sideNavBar.addEventListener('click', function (e) {
         if (darkModeButton) {
             darkModeButton.textContent = body.classList.contains('darkmode') ? 'Enable light mode' : 'Enable dark mode';
         }
-    } 
+
+       
+
+
+    }
     else if (navItem.id === 'over') {
+        body.dataset.page = 'overview';
         const over = overviewTemplate.content.cloneNode(true);
         mainContent.replaceChildren(over);
         clockrun();
@@ -235,11 +272,12 @@ sideNavBar.addEventListener('click', function (e) {
 
             if (cityElement) cityElement.textContent = selectedCity.name;
             if (countryElement) countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
-            
+
             changeWeather();
         }
-    } 
+    }
     else if (navItem.id === 'forca') {
+        body.dataset.page = 'forcast';
         const forca = forcastTemplate.content.cloneNode(true);
         mainContent.replaceChildren(forca);
         changeForcast();
@@ -288,3 +326,7 @@ function getWeather(code) {
         default: return { weatherCaption: "Unknown weather code", weatherEmoji: "❓" };
     }
 }
+
+let defaultCity;
+let deCityInlocal;
+
