@@ -653,7 +653,7 @@ body {
 }
 
 .settings-page {
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
     color: var(--text);
 }
 
@@ -669,7 +669,7 @@ body {
 .settings-card {
     background-color: var(--surface);
     padding: 22px;
-    margin-bottom: 20px;
+    margin-top: 20px;
     border-radius: 12px;
     border: 1px solid var(--border);
 }
@@ -678,7 +678,7 @@ body {
     margin-bottom: 10px;
 }
 
-.settings-card p {
+.thepara {
     color: var(--muted);
     margin-bottom: 18px;
     font-size: 14px;
@@ -689,7 +689,7 @@ body {
     gap: 12px;
 }
 
-.city-setting input {
+.defaultCity{
     flex: 1;
     min-width: 0;
     padding: 12px;
@@ -992,8 +992,27 @@ body {
 
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
+.saved-city-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+.saved-city {
+    flex: 2;
+    min-width: 0;
+    padding: 12px;
+    background-color: var(--input-bg);
+    color: var(--text);
+    border-radius: 7px;
+    font-size: 15px;
+    margin: 0px 0px 0px 0px;
 
+}
+
+.saved-city:hover {
+    border-color: var(--accent);
+}
 /* =====================================
    DARK MODE
 ===================================== */

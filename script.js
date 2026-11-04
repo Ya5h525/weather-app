@@ -5,14 +5,20 @@ const mainContent = document.getElementById('mainContent');
 const overviewTemplate = document.getElementById('overviewTemplate');
 const forcastTemplate = document.getElementById('forcastTemplate');
 const inputDefault = mainContent.querySelector('#defaultCity');
-const defaultCitySaveButton = document.getElementById('defaultCitySaveButton');
-const defaultCitiesContainer = document.getElementById('defaultCitiesContainer');
+const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton');
+const defaultCitiesContainer = mainContent.querySelector('#defaultCitiesContainer');
 
 
 let searchinput;
 let cityJson;
 let weatherData;
 let selectedCity;
+let defaultSavedCity ;
+const savedCity = JSON.parse(localStorage.getItem("defaultSavedCity"));
+if(savedCity){
+    selectedCity = savedCity;
+    changeWeather(selectedCity);
+}
 
 const ul = document.createElement('ul');
 
@@ -43,25 +49,25 @@ mainContent.addEventListener('click', function (e) {
         }
     }
 
-   if(body.dataset.page === 'setting'){
-    const saveButton = e.target.closest('#defaultCitySaveButton');
+    if (body.dataset.page === 'setting') {
+        const saveButton = e.target.closest('#defaultCitySaveButton');
 
-    if (!saveButton) return;
+        if (!saveButton) return;
 
-    const inputDefault = mainContent.querySelector('#defaultCity');
-    const defaultCitiesContainer = mainContent.querySelector('#defaultCitiesContainer');
+        const inputDefault = mainContent.querySelector('#defaultCity');
+        const defaultCitiesContainer = mainContent.querySelector('#defaultCitiesContainer');
 
-    if (!inputDefault || !defaultCitiesContainer) return;
+        if (!inputDefault || !defaultCitiesContainer) return;
 
-    const defaultCity = formatString(inputDefault.value);
+        const defaultCity = formatString(inputDefault.value);
 
-    if (!defaultCity) return;
+        if (!defaultCity) return;
 
-    citySearch(defaultCitiesContainer, defaultCity);
-   }
-    
+        citySearch(defaultCitiesContainer, defaultCity);
+    }
 
-;
+
+    ;
 });
 
 // fetch city suggestions
@@ -102,15 +108,19 @@ ul.addEventListener('click', function (e) {
 
     if (!cityData) return;
 
-    selectedCity = {
+    
+
+    
+    
+    if (body.dataset.page === 'overview') {
+
+        selectedCity = {
         name: cityData.name,
         country: cityData.country,
         admin1: cityData.admin1,
         latitude: cityData.latitude,
         longitude: cityData.longitude
-    };
-    console.log(selectedCity);
-    if (body.dataset.page === 'overview') {
+        };
         const cityElement = mainContent.querySelector('.city-name');
         const countryElement = mainContent.querySelector('.country-name');
 
@@ -121,14 +131,38 @@ ul.addEventListener('click', function (e) {
             countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
         }
 
-        changeWeather();
+        changeWeather(selectedCity);
         ul.remove();
     }
     else if (body.dataset.page === 'setting') {
-        console.log(ul)
-        console.log(selectedCity)
+
+        defaultSavedCity ={
+        name: cityData.name,
+        country: cityData.country,
+        admin1: cityData.admin1,
+        latitude: cityData.latitude,
+        longitude: cityData.longitude
+        }
+        localStorage.setItem("defaultSavedCity", JSON.stringify(defaultSavedCity));
+        const inputDefault = mainContent.querySelector('#defaultCity');
+
+        const para = document.createElement('p');
+        para.classList.add('saved-city');
+
+        para.textContent = `🌐 ${defaultSavedCity.name} - ${defaultSavedCity.admin1 || ''}, ${defaultSavedCity.country}`;
+
+        inputDefault.replaceWith(para);
+
+        const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton');
+        defaultCitySaveButton.classList.remove('search');
+        defaultCitySaveButton.classList.add('change-city');
+        defaultCitySaveButton.textContent = "Change City";
+
+        ul.remove();
     }
 });
+
+
 
 // fetch weather data for the selected city
 async function getWeatherData() {
@@ -140,8 +174,8 @@ async function getWeatherData() {
 }
 
 // update the overview tab with current weather
-async function changeWeather() {
-    if (!selectedCity) return;
+async function changeWeather(citytype) {
+    if (!citytype) return;
 
     const humidity = mainContent.querySelector('#humi');
     const temperature = mainContent.querySelector('#tempu');
@@ -164,15 +198,15 @@ async function changeWeather() {
 }
 
 // update the forecast tab cards
-async function changeForcast() {
-    if (!selectedCity) return;
+async function changeForcast(cityForcastType) {
+    if (!cityForcastType) return;
 
     const forecastDays = mainContent.querySelectorAll('.forecast-day');
     await getWeatherData();
 
     const forecastCity = mainContent.querySelector('.forecast-city');
     if (forecastCity) {
-        forecastCity.textContent = `${selectedCity.name}, ${selectedCity.country}`;
+        forecastCity.textContent = `${cityForcastType.name}, ${cityForcastType.country}`;
     }
 
     const forecastWeather = weatherData.daily;
@@ -252,11 +286,50 @@ sideNavBar.addEventListener('click', function (e) {
         mainContent.replaceChildren(set);
 
         const darkModeButton = mainContent.querySelector('#darkModeButton');
+
+        if(savedCity){
+            
+            const inputDefault = mainContent.querySelector('#defaultCity');
+
+            const para = document.createElement('p');
+            para.classList.add('saved-city');
+
+            para.textContent = `🌐 ${savedCity.name} - ${savedCity.admin1 || ''}, ${savedCity.country}`;
+
+            inputDefault.replaceWith(para);
+
+            const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton');
+            if(defaultCitySaveButton.classList.contains('search')){
+                 defaultCitySaveButton.classList.remove('search');
+            }
+            defaultCitySaveButton.classList.add('change-city');
+            defaultCitySaveButton.textContent = "Change City";
+;
+
+        }
         if (darkModeButton) {
             darkModeButton.textContent = body.classList.contains('darkmode') ? 'Enable light mode' : 'Enable dark mode';
         }
 
-       
+        const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton');
+        defaultCitySaveButton.addEventListener('click', function () {
+            if (defaultCitySaveButton.classList.contains('change-city')) {
+                
+                const para = mainContent.querySelector('.saved-city')
+                const inputDef = document.createElement('input');
+                inputDef.classList.add('defaultCity')
+
+                para.replaceWith(inputDef);
+
+                const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton');
+                defaultCitySaveButton.classList.remove('change-city');
+                defaultCitySaveButton.classList.add('search');
+                inputDef.placeholder = "Enter city name";
+                defaultCitySaveButton.textContent = "Search";
+            }
+        })
+
+
 
 
     }
@@ -273,14 +346,19 @@ sideNavBar.addEventListener('click', function (e) {
             if (cityElement) cityElement.textContent = selectedCity.name;
             if (countryElement) countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
 
-            changeWeather();
+            changeWeather(selectedCity);
         }
     }
     else if (navItem.id === 'forca') {
         body.dataset.page = 'forcast';
         const forca = forcastTemplate.content.cloneNode(true);
         mainContent.replaceChildren(forca);
-        changeForcast();
+        if(selectedCity){
+            changeForcast(selectedCity)
+        }
+        else if (savedCity){
+            changeForcast(selectedCity)
+        }
     }
 });
 
@@ -329,4 +407,3 @@ function getWeather(code) {
 
 let defaultCity;
 let deCityInlocal;
-
