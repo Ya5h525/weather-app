@@ -1,4 +1,10 @@
-// global elements and variables
+// 1. Initialize body and default page state at the top
+const body = document.body;
+if (!body.dataset.page) {
+    body.dataset.page = 'overview';
+}
+
+// Global elements and variables
 const sideNavBar = document.getElementById('sideNav');
 const settingTemplate = document.getElementById('settingTemplate');
 const mainContent = document.getElementById('mainContent');
@@ -9,10 +15,33 @@ let searchinput;
 let cityJson;
 let weatherData;
 let selectedCity;
+let defaultSavedCity;
+
+const loginCity = {
+    name: "Raipur",
+    country: "India",
+    admin1: "Chhattisgarh",
+    latitude: 21.265377,
+    longitude: 81.65988
+};
+
+// Dark mode initialization
+let darkmode = localStorage.getItem('darkmode');
+if (darkmode === 'active') {
+    enabledarkmode();
+} else {
+    disableDarkmode();
+}
+
+let savedCityInLocal = JSON.parse(localStorage.getItem("defaultSavedCity"));
+
+// Use saved city if available, otherwise fallback to loginCity (Raipur)
+selectedCity = savedCityInLocal || loginCity;
+changeWeather(selectedCity);
 
 const ul = document.createElement('ul');
 
-// handle search and dark mode clicks via event delegation on mainContent
+// Handle search, dark mode, and settings clicks via event delegation
 mainContent.addEventListener('click', function (e) {
     const searchButton = e.target.closest('#submitSearch');
 
@@ -27,7 +56,7 @@ mainContent.addEventListener('click', function (e) {
         searchinput = formatString(inputField.value);
         if (!searchinput) return;
 
-        citySearch(searchOptionsContainer);
+        citySearch(searchOptionsContainer, searchinput);
     }
 
     const darkModeButton = e.target.closest('#darkModeButton');
@@ -38,13 +67,42 @@ mainContent.addEventListener('click', function (e) {
             enabledarkmode(darkModeButton);
         }
     }
+
+    const saveButton = e.target.closest('.defaultCitySaveButtonClass, #defaultCitySaveButton');
+    if (body.dataset.page === 'setting' && saveButton) {
+        // If button is in 'change-city' mode, switch back to input box
+        if (saveButton.getAttribute('status') === 'change-city') {
+            const para = mainContent.querySelector('.saved-city');
+            if (para) {
+                const inputDefault = document.createElement('input');
+                inputDefault.id = 'defaultCity';
+                inputDefault.classList.add('defaultCity');
+                inputDefault.placeholder = "Enter city name";
+                para.replaceWith(inputDefault);
+            }
+            saveButton.setAttribute('status', 'search');
+            saveButton.textContent = "Search";
+            return;
+        }
+
+        // Otherwise, search for the entered city
+        const inputDefault = mainContent.querySelector('#defaultCity, .defaultCity');
+        const defaultCitiesContainer = mainContent.querySelector('#defaultCitiesContainer');
+
+        if (!inputDefault || !defaultCitiesContainer) return;
+
+        const defaultCity = formatString(inputDefault.value);
+        if (!defaultCity) return;
+
+        citySearch(defaultCitiesContainer, defaultCity);
+    }
 });
 
-// fetch city suggestions
-async function citySearch(searchOptionsContainer) {
+// Fetch city suggestions
+async function citySearch(Container, input) {
     ul.replaceChildren();
 
-    const jsonCitylink = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchinput)}&count=10&language=en&format=json`;
+    const jsonCitylink = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(input)}&count=10&language=en&format=json`;
 
     try {
         const response = await fetch(jsonCitylink);
@@ -57,62 +115,84 @@ async function citySearch(searchOptionsContainer) {
         } else {
             cityJson.results.forEach((element, index) => {
                 const li = document.createElement('li');
-                li.textContent = `📍 ${element.name} - ${element.admin1 || ''}, ${element.country}`;
+                li.textContent = `🌐 ${element.name} ${element.admin1 || ''}, ${element.country}`;
                 li.dataset.index = index;
                 ul.appendChild(li);
             });
         }
-        searchOptionsContainer.appendChild(ul);
+        Container.appendChild(ul);
     } catch (error) {
         console.error('City search failed:', error);
     }
 }
 
-// handle city selection from dropdown
+// Handle city selection from dropdown
 ul.addEventListener('click', function (e) {
     const selectedOption = e.target.closest('li');
-    if (!selectedOption || !ul.contains(selectedOption)) return;
+    if (!selectedOption || !ul.contains(selectedOption) || selectedOption.dataset.index === undefined) return;
 
     const latlongid = Number(selectedOption.dataset.index);
     const cityData = cityJson.results[latlongid];
-    
+
     if (!cityData) return;
 
-    selectedCity = {
-        name: cityData.name,
-        country: cityData.country,
-        admin1: cityData.admin1,
-        latitude: cityData.latitude,
-        longitude: cityData.longitude
-    };
+    if (body.dataset.page === 'overview') {
+        selectedCity = {
+            name: cityData.name,
+            country: cityData.country,
+            admin1: cityData.admin1,
+            latitude: cityData.latitude,
+            longitude: cityData.longitude
+        };
 
-    const cityElement = mainContent.querySelector('.city-name');
-    const countryElement = mainContent.querySelector('.country-name');
+        changeWeather(selectedCity);
+        ul.remove();
+    } else if (body.dataset.page === 'setting') {
+        defaultSavedCity = {
+            name: cityData.name,
+            country: cityData.country,
+            admin1: cityData.admin1,
+            latitude: cityData.latitude,
+            longitude: cityData.longitude
+        };
 
-    if (cityElement) {
-        cityElement.textContent = selectedCity.name;
+        localStorage.setItem("defaultSavedCity", JSON.stringify(defaultSavedCity));
+        savedCityInLocal = defaultSavedCity;
+        selectedCity = defaultSavedCity;
+
+        const inputDefault = mainContent.querySelector('#defaultCity, .defaultCity');
+        if (inputDefault) {
+            const para = document.createElement('p');
+            para.classList.add('saved-city');
+            para.textContent = `🌐 ${defaultSavedCity.name} ${defaultSavedCity.admin1 || ''}, ${defaultSavedCity.country}`;
+            inputDefault.replaceWith(para);
+        }
+
+        const defaultCitySaveButton = mainContent.querySelector('.defaultCitySaveButtonClass, #defaultCitySaveButton');
+        if (defaultCitySaveButton) {
+            defaultCitySaveButton.setAttribute('status', 'change-city');
+            defaultCitySaveButton.textContent = "Change City";
+        }
+
+        ul.remove();
     }
-    if (countryElement) {
-        countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
-    }
-
-    changeWeather();
-    ul.remove();
 });
 
-// fetch weather data for the selected city
-async function getWeatherData() {
-    if (!selectedCity) return;
+// Fetch weather data for the selected city
+async function getWeatherData(city) {
+    if (!city) return;
 
-    const weatherApiLink = `https://api.open-meteo.com/v1/forecast?latitude=${selectedCity.latitude}&longitude=${selectedCity.longitude}&daily=temperature_2m_mean,apparent_temperature_mean,cloud_cover_mean,relative_humidity_2m_mean,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,rain,precipitation,weather_code,cloud_cover&timezone=auto`;
+    const weatherApiLink = `https://api.open-meteo.com/v1/forecast?latitude=${city.latitude}&longitude=${city.longitude}&daily=temperature_2m_mean,apparent_temperature_mean,cloud_cover_mean,relative_humidity_2m_mean,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,rain,precipitation,weather_code,cloud_cover&timezone=auto`;
     const response = await fetch(weatherApiLink);
     weatherData = await response.json();
 }
 
-// update the overview tab with current weather
-async function changeWeather() {
-    if (!selectedCity) return;
+// Update the overview tab with current weather and city name
+async function changeWeather(citytype) {
+    if (!citytype) return;
 
+    const cityElement = mainContent.querySelector('.city-name');
+    const countryElement = mainContent.querySelector('.country-name');
     const humidity = mainContent.querySelector('#humi');
     const temperature = mainContent.querySelector('#tempu');
     const apparentTemperature = mainContent.querySelector('#reTemp');
@@ -120,7 +200,11 @@ async function changeWeather() {
     const weatherEmoji = mainContent.querySelector('#weatherEmoji');
     const weatherCaption = mainContent.querySelector('#weatherCaption');
 
-    await getWeatherData();
+    if (cityElement) cityElement.textContent = citytype.name;
+    if (countryElement) countryElement.textContent = `${citytype.admin1 || ''}, ${citytype.country}`;
+
+    await getWeatherData(citytype);
+    if (!weatherData || !weatherData.current) return;
 
     const currentWeather = weatherData.current;
     const weatherlogo = getWeather(currentWeather.weather_code);
@@ -133,21 +217,23 @@ async function changeWeather() {
     if (windSpeed) windSpeed.textContent = currentWeather.wind_speed_10m;
 }
 
-// update the forecast tab cards
-async function changeForcast() {
-    if (!selectedCity) return;
+// Update the forecast tab cards
+async function changeForcast(cityForcastType) {
+    if (!cityForcastType) return;
 
     const forecastDays = mainContent.querySelectorAll('.forecast-day');
-    await getWeatherData();
+    await getWeatherData(cityForcastType);
+    if (!weatherData || !weatherData.daily) return;
 
     const forecastCity = mainContent.querySelector('.forecast-city');
     if (forecastCity) {
-        forecastCity.textContent = `${selectedCity.name}, ${selectedCity.country}`;
+        forecastCity.textContent = `${cityForcastType.name}, ${cityForcastType.country}`;
     }
 
     const forecastWeather = weatherData.daily;
 
     forecastDays.forEach((day, index) => {
+        if (!forecastWeather.time[index]) return;
         const [year, month, days] = forecastWeather.time[index].split('-');
         const today = new Date();
         const forecastDate = new Date(year, month - 1, days);
@@ -168,7 +254,7 @@ async function changeForcast() {
     });
 }
 
-// helper to capitalize search input
+// Helper to capitalize search input
 function formatString(str) {
     if (!str) return '';
     const cleanedStr = str.trim();
@@ -176,7 +262,7 @@ function formatString(str) {
     return cleanedStr.charAt(0).toUpperCase() + cleanedStr.slice(1).toLowerCase();
 }
 
-// clock logic for the overview tab
+// Clock logic for the overview tab
 function clockrun() {
     const timeElement = mainContent.querySelector('#timeId');
     const dateElement = mainContent.querySelector('#dateId');
@@ -205,7 +291,7 @@ function clockrun() {
 clockrun();
 setInterval(clockrun, 30000);
 
-// handle sidebar navigation and templates
+// Handle sidebar navigation and templates
 sideNavBar.addEventListener('click', function (e) {
     const navItem = e.target.closest('.nav-button');
     if (!navItem || !sideNavBar.contains(navItem)) return;
@@ -216,45 +302,46 @@ sideNavBar.addEventListener('click', function (e) {
     navItem.classList.add('active');
 
     if (navItem.id === 'setting') {
+        body.dataset.page = 'setting';
         const set = settingTemplate.content.cloneNode(true);
         mainContent.replaceChildren(set);
 
         const darkModeButton = mainContent.querySelector('#darkModeButton');
+
+        if (savedCityInLocal) {
+            const inputDefault = mainContent.querySelector('#defaultCity, .defaultCity');
+            if (inputDefault) {
+                const para = document.createElement('p');
+                para.classList.add('saved-city');
+                para.textContent = `🌐 ${savedCityInLocal.name} ${savedCityInLocal.admin1 || ''}, ${savedCityInLocal.country}`;
+                inputDefault.replaceWith(para);
+            }
+
+            const defaultCitySaveButton = mainContent.querySelector('#defaultCitySaveButton, .defaultCitySaveButtonClass');
+            if (defaultCitySaveButton) {
+                defaultCitySaveButton.setAttribute('status', 'change-city');
+                defaultCitySaveButton.textContent = "Change City";
+            }
+        }
+
         if (darkModeButton) {
             darkModeButton.textContent = body.classList.contains('darkmode') ? 'Enable light mode' : 'Enable dark mode';
         }
-    } 
-    else if (navItem.id === 'over') {
+    } else if (navItem.id === 'over') {
+        body.dataset.page = 'overview';
         const over = overviewTemplate.content.cloneNode(true);
         mainContent.replaceChildren(over);
         clockrun();
 
-        if (selectedCity) {
-            const cityElement = mainContent.querySelector('.city-name');
-            const countryElement = mainContent.querySelector('.country-name');
-
-            if (cityElement) cityElement.textContent = selectedCity.name;
-            if (countryElement) countryElement.textContent = `${selectedCity.admin1 || ''}, ${selectedCity.country}`;
-            
-            changeWeather();
-        }
-    } 
-    else if (navItem.id === 'forca') {
+        changeWeather(selectedCity || savedCityInLocal || loginCity);
+    } else if (navItem.id === 'forca') {
+        body.dataset.page = 'forcast';
         const forca = forcastTemplate.content.cloneNode(true);
         mainContent.replaceChildren(forca);
-        changeForcast();
+
+        changeForcast(selectedCity || savedCityInLocal || loginCity);
     }
 });
-
-// dark mode toggle logic
-const body = document.body;
-let darkmode = localStorage.getItem('darkmode');
-
-if (darkmode === 'active') {
-    enabledarkmode();
-} else {
-    disableDarkmode();
-}
 
 function enabledarkmode(button) {
     localStorage.setItem('darkmode', 'active');
@@ -272,7 +359,7 @@ function disableDarkmode(button) {
     }
 }
 
-// map wmo weather codes to emojis and captions
+// Map WMO weather codes to emojis and captions
 function getWeather(code) {
     switch (code) {
         case 0: return { weatherCaption: "Clear sky", weatherEmoji: "☀️" };
